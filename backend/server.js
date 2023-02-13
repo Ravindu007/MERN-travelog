@@ -8,6 +8,7 @@ const App = express()
 //midlleware
 App.use(express.json())
 
+
 //establishing router
 const travelLogRoutes = require("./routes/travelLogRoutes")
 

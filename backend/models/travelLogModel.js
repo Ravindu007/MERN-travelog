@@ -7,7 +7,6 @@ const travelLogSchema = new Schema({
   place:{type:String, require:true},
   date:{type:String, require:true},
   desc:{type:String, required:true},
-  photo:{type:Buffer, contentType:String}
 },{timestamps:true})
 
 module.exports = mongoose.model('travelLog', travelLogSchema)

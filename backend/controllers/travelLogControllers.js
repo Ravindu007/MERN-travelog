@@ -12,6 +12,16 @@ const getAllTravelLogs = async(req,res) => {
   }
 }
 
+//get all related travelLogs (filter by id => for profile)
+const getAllRealtedTravelLogs = async(req,res) => {
+  try {
+    const allRelatedTravelLogs = await travelLogModel.find({}).sort({createdAt:-1})
+    res.status(200).json(allRelatedTravelLogs)
+  } catch (error) {
+    res.status(400).json({error:error.message})
+  }
+}
+
 //get single doc
 const getASingleTravelLog = async(req,res) => {
   try {
@@ -37,10 +47,9 @@ const getASingleTravelLog = async(req,res) => {
 // create doc
 const createTravelLog = async(req,res) => {
   const {title, place, date, desc} = req.body
-  const photo = req.file.filename
 
   try {
-    const travelLog = await travelLogModel.create({title, place, date, desc, photo})
+    const travelLog = await travelLogModel.create({title, place, date, desc})
     res.status(200).json(travelLog)
   } catch (error) {
     res.status(400).json({error:error.message})
@@ -91,4 +100,4 @@ const deleteATravelLog = async(req, res) => {
   }
 }
 
-module.exports = {createTravelLog, getAllTravelLogs, getASingleTravelLog, updateATravelLog, deleteATravelLog}
+module.exports = {createTravelLog, getAllTravelLogs, getAllRealtedTravelLogs,getASingleTravelLog, updateATravelLog, deleteATravelLog}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import TravelLogDetails from '../components/TravelLogDetails'
+import TravelLogDetails from '../components/details/TravelLogDetails'
 
 const Home = () => {
 

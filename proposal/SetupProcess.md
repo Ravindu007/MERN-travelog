@@ -6,4 +6,5 @@
 6. create react Application
 7. Setup react-router
 8. create Home Page
-9. create other components
+9. create other components (details component)
+10. create createForm component

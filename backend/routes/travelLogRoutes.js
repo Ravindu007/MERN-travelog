@@ -1,33 +1,17 @@
 const express = require("express")
-const {createTravelLog, getAllTravelLogs, getASingleTravelLog, updateATravelLog, deleteATravelLog} = require("../controllers/travelLogControllers")
-
-
-//for image upload
-const multer = require("multer")
-const path = require("path")
+const {createTravelLog, getAllTravelLogs,getAllRealtedTravelLogs, getASingleTravelLog, updateATravelLog, deleteATravelLog} = require("../controllers/travelLogControllers")
 
 const router = express.Router()
-
-
-//setup storage engine
-const storage = multer.diskStorage({
-  destination:'../frontend/public/uploaded-photos',
-  filename: function(req,file,cb){
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
-  }
-})
-
-const upload = multer({
-  storage:storage
-})
-
 
 //routes
 router.get("/", getAllTravelLogs)
 
+//get all the workouts related to id
+router.get("/related", getAllRealtedTravelLogs)
+
 router.get("/:id", getASingleTravelLog)
 
-router.post("/", upload.single('image') , createTravelLog)
+router.post("/", createTravelLog)
 
 router.patch("/:id", updateATravelLog)
 
