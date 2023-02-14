@@ -1,22 +1,25 @@
 import React, { useState } from 'react'
 
 const TravelLogForm = () => {
-  const[title, setTitle] = useState("")
-  const[place, setPlace] = useState("")
-  const[date, setDate] = useState("")
-  const[desc, setDesc] = useState("")
+  const [title, setTitle] = useState('')
+  const [place, setPlace] = useState('')
+  const [date, setDate] = useState('')
+  const [desc, setDesc] = useState('')
+  const [image, setImage] = useState(null)
 
   const handleSubmit = async(e) => {
     e.preventDefault()
     
-    const travelLog = {title, place, date, desc}
+    const formData = new FormData()
+    formData.append('title', title)
+    formData.append('place', place)
+    formData.append('date', date)
+    formData.append('desc', desc)
+    formData.append('image', image)
 
     const response = await fetch("/api/travelLogs/",{
       method:'POST',
-      body:JSON.stringify(travelLog),
-      headers:{
-        'Content-Type':'application/json'
-      }
+      body:formData
     })
 
     const json = await response.json()
@@ -26,6 +29,7 @@ const TravelLogForm = () => {
       setPlace('')
       setDate('')
       setDesc('')
+      setImage(null)
       console.log('travelLog created', json);
     }
   }
@@ -73,6 +77,16 @@ const TravelLogForm = () => {
           value={desc}
           className="form-control"
         />
+        </div>
+
+        <div className="form-group">
+          <label>Image</label>
+          <input
+            type="file"
+            onChange={(e) => setImage(e.target.files[0])}
+            name="image"
+            className="form-control-file"
+          />
         </div>
 
         <button className='btn btn-outline-primary'>Add</button>

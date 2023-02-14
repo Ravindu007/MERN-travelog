@@ -49,10 +49,11 @@ const createTravelLog = async(req,res) => {
   const {title, place, date, desc} = req.body
 
   try {
-    const travelLog = await travelLogModel.create({title, place, date, desc})
+    const image = req.file ? `/uploads/${req.file.filename}` : null // get the uploaded image path or set to null if not provided
+    const travelLog = await travelLogModel.create({ title, place, date, desc, image })
     res.status(200).json(travelLog)
   } catch (error) {
-    res.status(400).json({error:error.message})
+    res.status(400).json({ error: error.message })
   }
 }
 

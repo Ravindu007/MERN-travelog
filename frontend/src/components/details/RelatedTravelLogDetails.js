@@ -8,7 +8,7 @@ const RelatedTravelLogDetails = ({relatedTravelLog}) => {
     <div className='RelatedTravelLogDetails'>
       <div className="row">
             <div className="images col-md-12">
-              <img src={relatedTravelLog.photo ? `/uploaded-photos/${relatedTravelLog.photo}`:"/fallback.jpg"} alt=""  className='mx-auto d-block img-fluid'/>
+            <img src={relatedTravelLog.image ? `${relatedTravelLog.image}`:"/fallback.jpg"} alt="" className='mx-auto d-block img-fluid'/>
               </div>
             <div className="details col-md-12">
               <p><strong>Name: </strong>{relatedTravelLog.title}</p>
