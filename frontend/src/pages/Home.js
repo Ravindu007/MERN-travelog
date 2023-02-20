@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import TravelLogDetails from '../components/details/TravelLogDetails'
+
+//hooks
+import {useTravelLogContext} from "../hooks/useTravelLogContext"
 
 const Home = () => {
 
-  const [travelLogs, setTravelLogs] = useState(null)
-
+  //state
+  const {travelLogs, dispatch} = useTravelLogContext()
 
   //fetch data from backEnd
   useEffect(()=>{
@@ -13,12 +16,12 @@ const Home = () => {
       const json = await response.json()
 
       if(response.ok){
-        setTravelLogs(json)
+        dispatch({type:"SET_TRAVELLOGS" , payload:json})
       }
     }
 
     fetchTravelLogs()
-  },[])
+  },[dispatch])
   
   return (
     <div className='home'>

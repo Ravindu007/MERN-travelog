@@ -6,6 +6,7 @@ import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 
+
 //components
 import Navbar from "./components/navbar/Navbar";
 

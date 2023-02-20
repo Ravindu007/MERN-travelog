@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
+//hooks
+import {useTravelLogContext} from "../../hooks/useTravelLogContext"
 
 const TravelLogForm = () => {
+
+  const {dispatch} = useTravelLogContext()
+
   const [title, setTitle] = useState('')
   const [place, setPlace] = useState('')
   const [date, setDate] = useState('')
@@ -30,6 +35,7 @@ const TravelLogForm = () => {
       setDate('')
       setDesc('')
       setImage(null)
+      dispatch({type:"CREATE_TRAVELLOG", payload:json})
       console.log('travelLog created', json);
     }
   }
@@ -62,7 +68,7 @@ const TravelLogForm = () => {
         <div className="form-group">
         <label>Date</label>
         <input 
-          type="text"
+          type="date"
           onChange={e=>setDate(e.target.value)}
           value={date}
           className="form-control"

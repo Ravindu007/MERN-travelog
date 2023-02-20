@@ -60,23 +60,38 @@ const createTravelLog = async(req,res) => {
 //update doc
 const updateATravelLog = async(req,res) => {
   try {
-    const {id} = req.params
+      const {id} = req.params
 
-    //enusre id is valid
-    if(!mongoose.Types.ObjectId.isValid(id)){
-      res.status(400).json({error:"No such document"})
+      //enusre id is valid
+      if(!mongoose.Types.ObjectId.isValid(id)){
+        res.status(400).json({error:"No such document"})
+      }
+
+
+      const travelLog = await travelLogModel.findById(id);
+
+      // ensure the travel log exists
+      if (!travelLog) {
+        return res.status(404).json({ error: "Travel log not found" });
+      }
+
+      // update travel log properties
+      travelLog.title = req.body.title || travelLog.title;
+      travelLog.place = req.body.place || travelLog.place;
+      travelLog.date = req.body.date || travelLog.date;
+      travelLog.desc = req.body.desc || travelLog.desc;
+
+      // handle image upload
+      if (req.file) {
+        travelLog.image = `/uploads/${req.file.filename}`;
+      }
+
+      const updatedTravelLog = await travelLog.save();
+
+      res.status(200).json(updatedTravelLog);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
     }
-
-    const updatedTravelLog = await travelLogModel.findByIdAndUpdate({_id:id},{...req.body},{new:true})
-
-    if(!updatedTravelLog){
-      res.status(400).json({error:"No such document"})
-    }
-
-    res.status(200).json(updatedTravelLog)
-  } catch (error) {
-    res.status(400).json({error:error.message})
-  }
 }
 
 

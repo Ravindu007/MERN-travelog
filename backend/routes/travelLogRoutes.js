@@ -28,7 +28,7 @@ router.get("/:id", getASingleTravelLog)
 
 router.post("/", upload.single("image"), createTravelLog)
 
-router.patch("/:id", updateATravelLog)
+router.patch("/:id",upload.single("image"), updateATravelLog)
 
 router.delete("/:id", deleteATravelLog)
 

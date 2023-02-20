@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 
 //components
 import RelatedTravelLogDetails from '../components/details/RelatedTravelLogDetails'
 import TravelLogForm from '../components/form/TravelLogForm'
 
+//hooks
+import {useTravelLogContext} from "../hooks/useTravelLogContext"
+
 const Profile = () => {
 
-  const [relatedTravelLogs, setRelatedTravelLogs] = useState(null)
+  const {travelLogs:relatedTravelLogs, dispatch} = useTravelLogContext()
 
   //fetch data from backEnd
   useEffect(()=>{
@@ -16,12 +19,12 @@ const Profile = () => {
       const json = await response.json()
 
       if(response.ok){
-        setRelatedTravelLogs(json)
+        dispatch({type:"SET_TRAVELLOGS", payload:json})
       }
     }
 
     fetchTravelLogs()
-  },[])
+  },[dispatch])
 
   return (
     <div className="row">
