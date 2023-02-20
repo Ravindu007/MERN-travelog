@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import View from "./pages/View"
 
 
 //components
@@ -21,6 +22,7 @@ function App() {
             <Route path="/profile" element={<Profile/>}></Route>
             <Route path="/login" element={<Login/>}></Route>
             <Route path="/signup" element={<Signup/>}></Route>
+            <Route path="/view" element={<View/>}></Route>
           </Routes>
         </div>
       </BrowserRouter>
