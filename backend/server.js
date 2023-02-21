@@ -2,6 +2,15 @@ require("dotenv").config()
 const mongoose = require("mongoose")
 const express = require("express")
 
+const admin = require("firebase-admin");
+const serviceAccount = require("./serviceAaccount.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  storageBucket: "travelog-fa88d.appspot.com",
+});
+
+module.exports = {admin:admin}
 
 const App = express()
 

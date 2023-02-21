@@ -1,6 +1,9 @@
 const mongoose = require("mongoose")
 const travelLogModel = require("../models/travelLogModel")
 
+const {admin} = require("../server")
+const bucket = admin.storage().bucket("travelog-fa88d.appspot.com");
+
 
 //get all docs 
 const getAllTravelLogs = async(req,res) => {
@@ -49,9 +52,39 @@ const createTravelLog = async(req,res) => {
   const {title, place, date, desc} = req.body
 
   try {
-    const image = req.file ? `/uploads/${req.file.filename}` : null // get the uploaded image path or set to null if not provided
-    const travelLog = await travelLogModel.create({ title, place, date, desc, image })
-    res.status(200).json(travelLog)
+    let imageURL = null;
+
+    if(req.file){
+      const filename = req.file.originalname;
+      const file = bucket.file(filename);
+
+      const stream = file.createWriteStream({
+        metadata: {
+          contentType: req.file.mimetype,
+        },
+      });
+
+      stream.on("error", (err) => {
+        console.error(err);
+      });
+
+      stream.on("finish", async () => {
+        imageURL = `https://storage.googleapis.com/${bucket.name}/${filename}`;
+        const travelLog = await travelLogModel.create({
+          title,
+          place,
+          date,
+          desc,
+          image: imageURL,
+        });
+        res.status(200).json(travelLog);
+      });
+
+      stream.end(req.file.buffer);
+    }else {
+      const travelLog = await travelLogModel.create({title,place,date,desc,image: null,});
+      res.status(200).json(travelLog);
+    }
   } catch (error) {
     res.status(400).json({ error: error.message })
   }
@@ -81,14 +114,33 @@ const updateATravelLog = async(req,res) => {
       travelLog.date = req.body.date || travelLog.date;
       travelLog.desc = req.body.desc || travelLog.desc;
 
+      let imageURL = null;
+
       // handle image upload
       if (req.file) {
-        travelLog.image = `/uploads/${req.file.filename}`;
+        const filename = req.file.originalname;
+        const file = bucket.file(filename);
+  
+        const stream = file.createWriteStream({
+          metadata: {
+            contentType: req.file.mimetype,
+          },
+        });
+  
+        stream.on("error", (err) => {
+          console.error(err);
+        });
+        
+        stream.on("finish", async () => {
+          imageURL = `https://storage.googleapis.com/${bucket.name}/${filename}`;
+          travelLog.image = imageURL
+
+          const updatedTravelLog = await travelLog.save();
+          res.status(200).json(updatedTravelLog);
+        });
+
+        stream.end(req.file.buffer);
       }
-
-      const updatedTravelLog = await travelLog.save();
-
-      res.status(200).json(updatedTravelLog);
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
