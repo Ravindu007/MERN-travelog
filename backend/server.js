@@ -7,7 +7,7 @@ const serviceAccount = require("./serviceAaccount.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  storageBucket: "travelog-fa88d.appspot.com",
+  storageBucket: process.env.STORAGE_BUCKET,
 });
 
 module.exports = {admin:admin}
@@ -20,9 +20,14 @@ App.use(express.json())
 
 //establishing router
 const travelLogRoutes = require("./routes/travelLogRoutes")
+const userRoutes = require("./routes/userRoutes")
+
+
 
 //establish routes
 App.use("/api/travelLogs",travelLogRoutes)
+App.use("/api/user", userRoutes)
+
 
 mongoose.set('strictQuery', false)
 

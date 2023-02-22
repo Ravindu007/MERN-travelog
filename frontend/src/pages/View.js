@@ -1,13 +1,15 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom'
 
+//styles
+import "./view.scss"
 
 const View = () => {
   const location = useLocation();
   const travelLog = location.state.travelLog;
 
   return (
-    <div>
+    <div className='view'>
       <div className="images col-sm-12 col-md-6">
               <img src={travelLog.image ? `${travelLog.image}`:"/fallback.jpg"} alt={travelLog.image} className='mx-auto d-block img-fluid' style={{minHeight:"400px"}}/>
       </div>

@@ -2,7 +2,7 @@ const mongoose = require("mongoose")
 const travelLogModel = require("../models/travelLogModel")
 
 const {admin} = require("../server")
-const bucket = admin.storage().bucket("travelog-fa88d.appspot.com");
+const bucket = admin.storage().bucket(process.env.STORAGE_BUCKET);
 
 
 //get all docs 
