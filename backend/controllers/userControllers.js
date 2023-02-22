@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken")
 
 //create a token for used in signup/ login
 const createToken = (_id) => {
-  //pass
+  return jwt.sign({_id:_id}, process.env.SECRET, {expiresIn:'1d'})
 }
 
 //sign up controller 
@@ -13,7 +13,11 @@ const signupUser = async(req,res) => {
 
   try{
     const user = await userModel.signup(email, password)
-    res.status(200).json({email, user})
+
+    //create token 
+    const token = createToken(user._id)
+
+    res.status(200).json({email, token})
   }catch(error){
     res.status(400).json({error:error.message})
   }
@@ -22,7 +26,18 @@ const signupUser = async(req,res) => {
 
 //login controller
 const loginUser = async(req,res) => {
-  res.json({msg:"User logged in"})
+  const {email, password} = req.body
+
+  try {
+    const user = await userModel.login(email,password)
+
+    //create a token for that user
+    const token = createToken(user._id)
+    //send token + email as response
+    res.status(200).json({email, token})
+  } catch (error) {
+    res.status(400).json({error:error.message})
+  }
 }
 
 
