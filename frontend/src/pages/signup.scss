@@ -1,6 +1,6 @@
 .signup{
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items:center;
   .signupForm{
     margin-top: 10%;
@@ -8,5 +8,10 @@
     border-radius: 0.5em;
     width:25% ;
     padding: 40px 20px;
+    .error{
+      .error{
+        color: red;
+      }
+    }
   }
 }
