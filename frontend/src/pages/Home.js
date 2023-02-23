@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import TravelLogDetails from '../components/details/TravelLogDetails'
 
 //hooks
@@ -10,6 +10,9 @@ const Home = () => {
   //state
   const {travelLogs, dispatch} = useTravelLogContext()
   const {user} = useAuthContext()
+
+  const [loading,setLoading] = useState(true)
+
 
   //fetch data from backEnd
   useEffect(()=>{
@@ -23,6 +26,7 @@ const Home = () => {
 
       if(response.ok){
         dispatch({type:"SET_TRAVELLOGS" , payload:json})
+        setLoading(false)
       }
     }
 
@@ -33,10 +37,14 @@ const Home = () => {
   
   return (
     <div className='home'>
-      {travelLogs && (
-        travelLogs.map((travelLog)=>(
-          <TravelLogDetails key={travelLog._id} travelLog={travelLog}/>
-        ))
+      {loading ? (
+        <p>LOADING....</p>
+      ):(
+        travelLogs && (
+          travelLogs.map((travelLog)=>(
+            <TravelLogDetails key={travelLog._id} travelLog={travelLog}/>
+          ))
+        )
       )}
     </div>
   )

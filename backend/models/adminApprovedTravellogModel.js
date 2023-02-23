@@ -2,7 +2,7 @@ const mongoose = require("mongoose")
 
 const Schema = mongoose.Schema
 
-const travelLogSchema = new Schema({
+const AdminApprovedTravelLogSchema = new Schema({
   title:{type:String, require:true},
   place:{type:String, require:true},
   date:{type:String, require:true},
@@ -10,7 +10,7 @@ const travelLogSchema = new Schema({
   image:{type:String},
   userEmail: {type:String, required:true},
   user_id:{type:String, required:true},
-  approval:{type:String}
+  approved:{type:String, required:true}
 },{timestamps:true})
 
-module.exports = mongoose.model('travelLog', travelLogSchema)
+module.exports = mongoose.model('adminApprovedTravelLog', AdminApprovedTravelLogSchema)

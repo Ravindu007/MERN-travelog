@@ -1,15 +1,86 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
+const adminApprovedTravellogModel = require("../models/adminApprovedTravellogModel");
 const travelLogModel = require("../models/travelLogModel")
 
 const {admin} = require("../server")
 const bucket = admin.storage().bucket(process.env.STORAGE_BUCKET);
 
+//Admin controllers
+
+//create admin approved posts
+const createApprovedTravelLog = async(req,res) => {
+  const {title, place, date, desc, image, userEmail, user_id, approved} = req.body
+  
+  try{
+    const travelLog = await adminApprovedTravellogModel.create({
+      title,
+      place,
+      date,
+      desc,
+      image,
+      userEmail,
+      user_id,
+      approved
+    });
+    res.status(200).json(travelLog);
+  }catch (error) {
+    res.status(400).json({ error: error.message })
+  }
+}
 
 //get all docs 
 const getAllTravelLogs = async(req,res) => {
   try {
     const allTravelLogs = await travelLogModel.find({}).sort({createdAt:-1})
     res.status(200).json(allTravelLogs)
+  } catch (error) {
+    res.status(400).json({error:error.message})
+  }
+}
+
+//update only approval
+const updateApproval = async(req,res) => {
+  const {approval} = req.body
+
+  try {
+      const {id} = req.params
+
+      //enusre id is valid
+      if(!mongoose.Types.ObjectId.isValid(id)){
+        res.status(400).json({error:"No such document"})
+      }
+
+
+      const travelLog = await travelLogModel.findById(id);
+
+      // ensure the travel log exists
+      if (!travelLog) {
+        return res.status(404).json({ error: "Travel log not found" });
+      }
+
+
+      // update travel log properties
+      travelLog.approval = approval
+      
+      const updatedTravelLog = await travelLog.save();
+      res.status(200).json(updatedTravelLog);
+        
+
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+}
+
+
+
+
+
+//all user controllers
+//get AdminApprovedTravelLogs
+const getAdminApprovedTravelLogs = async(req,res) =>{
+  try {
+    const allAdminApprovedTravelLogs = await adminApprovedTravellogModel.find({}).sort({createdAt:-1})
+    res.status(200).json(allAdminApprovedTravelLogs)
   } catch (error) {
     res.status(400).json({error:error.message})
   }
@@ -184,4 +255,4 @@ const deleteATravelLog = async(req, res) => {
   }
 }
 
-module.exports = {createTravelLog, getAllTravelLogs, getAllRealtedTravelLogs,getASingleTravelLog, updateATravelLog, deleteATravelLog}
+module.exports = {createTravelLog, getAdminApprovedTravelLogs, getAllRealtedTravelLogs,getASingleTravelLog, updateATravelLog, deleteATravelLog, createApprovedTravelLog, getAllTravelLogs, updateApproval}
