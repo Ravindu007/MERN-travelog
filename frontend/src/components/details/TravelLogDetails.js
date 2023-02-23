@@ -22,6 +22,7 @@ const TravelLogDetails = ({travelLog}) => {
               <p><strong>Place: </strong>{travelLog.place}</p>
               <p><strong>Date: </strong>{travelLog.date}</p>
               <p><strong>Created At: </strong>{formatDistanceToNow(new Date(travelLog.createdAt), {addSuffix:true})}</p>
+              <p><strong>By: </strong>{travelLog.userEmail}</p>
               <button className='btn btn-outline-success' onClick={handleClick}>View More</button>
             </div>     
       </div>

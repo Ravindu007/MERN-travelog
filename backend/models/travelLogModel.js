@@ -8,6 +8,7 @@ const travelLogSchema = new Schema({
   date:{type:String, require:true},
   desc:{type:String, required:true},
   image:{type:String},
+  userEmail: {type:String, required:true},
   user_id:{type:String, required:true}
 },{timestamps:true})
 

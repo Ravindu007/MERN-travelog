@@ -8,6 +8,8 @@ const TravelLogForm = () => {
   const {dispatch} = useTravelLogContext()
   const {user} = useAuthContext()
 
+  const [isLoading, setIsLoading] = useState(null)
+
   const [title, setTitle] = useState('')
   const [place, setPlace] = useState('')
   const [date, setDate] = useState('')
@@ -21,6 +23,8 @@ const TravelLogForm = () => {
       return
     }
     e.preventDefault()
+
+    setIsLoading(true)
     
     const formData = new FormData()
     formData.append('title', title)
@@ -47,6 +51,7 @@ const TravelLogForm = () => {
       setImage(null)
       dispatch({type:"CREATE_TRAVELLOG", payload:json})
       console.log('travelLog created', json);
+      setIsLoading(false)
     }
   }
 
@@ -105,7 +110,7 @@ const TravelLogForm = () => {
           />
         </div>
 
-        <button className='btn btn-outline-primary'>Add</button>
+        <button disabled={isLoading} className='btn btn-outline-primary'>Add</button>
       </form>
     </div>
   )

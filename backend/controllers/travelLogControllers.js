@@ -52,6 +52,7 @@ const getASingleTravelLog = async(req,res) => {
 const createTravelLog = async(req,res) => {
   const {title, place, date, desc} = req.body
   const user_id = req.user._id
+  const userEmail = req.userEmail
 
   try {
     let imageURL = null;
@@ -78,14 +79,15 @@ const createTravelLog = async(req,res) => {
           date,
           desc,
           image: imageURL,
-          user_id
+          user_id,
+          userEmail
         });
         res.status(200).json(travelLog);
       });
 
       stream.end(req.file.buffer);
     }else {
-      const travelLog = await travelLogModel.create({title,place,date,desc,image: null,user_id});
+      const travelLog = await travelLogModel.create({title,place,date,desc,image: null,user_id, userEmail});
       res.status(200).json(travelLog);
     }
   } catch (error) {
