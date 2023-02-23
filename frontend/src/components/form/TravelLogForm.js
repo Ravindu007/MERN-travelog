@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 //hooks
 import {useTravelLogContext} from "../../hooks/useTravelLogContext"
+import { useAuthContext } from '../../hooks/useAuthContext'
 
 const TravelLogForm = () => {
 
   const {dispatch} = useTravelLogContext()
+  const {user} = useAuthContext()
 
   const [title, setTitle] = useState('')
   const [place, setPlace] = useState('')
@@ -13,6 +15,11 @@ const TravelLogForm = () => {
   const [image, setImage] = useState(null)
 
   const handleSubmit = async(e) => {
+
+    if(!user){
+      console.log('You must logged first')
+      return
+    }
     e.preventDefault()
     
     const formData = new FormData()
@@ -24,7 +31,10 @@ const TravelLogForm = () => {
 
     const response = await fetch("/api/travelLogs/",{
       method:'POST',
-      body:formData
+      body:formData,
+      headers:{
+        'Authorization':`${user.email} ${user.token}`
+      }
     })
 
     const json = await response.json()

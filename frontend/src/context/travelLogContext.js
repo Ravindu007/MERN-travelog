@@ -9,6 +9,10 @@ export const tarvelLogReducer  = (state, action) => {
       return {
         travelLogs:action.payload
       }
+    case 'SET_RELEVANT_TRAVELLOGS':
+      return{
+        travelLogs:action.payload
+      }
     case 'CREATE_TRAVELLOG':
       return{
         travelLogs:[action.payload , ...state.travelLogs]

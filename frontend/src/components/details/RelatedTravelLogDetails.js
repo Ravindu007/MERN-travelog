@@ -5,10 +5,12 @@ import formatDistanceToNow from "date-fns/formatDistanceToNow"
 
 //hooks
 import {useTravelLogContext} from "../../hooks/useTravelLogContext"
+import {useAuthContext} from "../../hooks/useAuthContext"
 
 const RelatedTravelLogDetails = ({relatedTravelLog}, props) => {
 
   const {dispatch} = useTravelLogContext()
+  const {user} = useAuthContext()
 
   //updating 
   const [isEditing, setIsEditing] = useState(false)
@@ -20,6 +22,11 @@ const RelatedTravelLogDetails = ({relatedTravelLog}, props) => {
   const[draftImage, setDraftImage] = useState(null)
 
   const handleUpdate = async(e) => {
+
+    if(!user){
+      console.log("You must loggef in first")
+    }
+
     e.preventDefault()
     setIsEditing(false)
     const formData = new FormData() 
@@ -32,7 +39,10 @@ const RelatedTravelLogDetails = ({relatedTravelLog}, props) => {
 
     const response = await fetch("/api/travelLogs/" + relatedTravelLog._id, {
       method:"PATCH",
-      body:formData
+      body:formData,
+      headers:{
+        'Authorization': `${user.email} ${user.token}`
+      }
     })
 
     const json = await response.json()
@@ -43,9 +53,14 @@ const RelatedTravelLogDetails = ({relatedTravelLog}, props) => {
   }
 
   const handleDelete = async() => {
-    
+      if(!user){
+        console.log("You must loggef in first")
+      }
       const response = await fetch("/api/travelLogs/" + relatedTravelLog._id,{
-        method:"DELETE"
+        method:"DELETE",
+        headers:{
+          'Authorization': `${user.email} ${user.token}`
+        }
       })
 
       const json = await response.json()

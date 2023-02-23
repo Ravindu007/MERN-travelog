@@ -1,9 +1,12 @@
 const express = require("express")
 const multer = require("multer")
+const requireAuth = require("../middleware/requireAuth")
 
 const {createTravelLog, getAllTravelLogs,getAllRealtedTravelLogs, getASingleTravelLog, updateATravelLog, deleteATravelLog} = require("../controllers/travelLogControllers")
 
 const router = express.Router()
+
+router.use(requireAuth)
 
 const upload = multer({
   storage: multer.memoryStorage(),
