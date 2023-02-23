@@ -9,7 +9,8 @@ const travelLogSchema = new Schema({
   desc:{type:String, required:true},
   image:{type:String},
   userEmail: {type:String, required:true},
-  user_id:{type:String, required:true}
+  user_id:{type:String, required:true},
+  likes:{type:Number}
 },{timestamps:true})
 
 module.exports = mongoose.model('travelLog', travelLogSchema)
