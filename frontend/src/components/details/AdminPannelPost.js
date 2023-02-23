@@ -82,6 +82,7 @@ const AdminPannelPost = ({travelLog}, props) => {
                 <img src={travelLog.image ? `${travelLog.image}`:"/fallback.jpg"} alt="" className='mx-auto d-block img-fluid'style={{maxHeight:"400px"}}/>
               </div>
               <div className="details col-md-12">
+                <p><strong>Title: </strong>{travelLog.title}</p>
                 <p><strong>Place: </strong>{travelLog.place}</p>
                 <p><strong>Date: </strong>{travelLog.date}</p>
                 <p><strong>Description: </strong>{travelLog.desc}</p>
