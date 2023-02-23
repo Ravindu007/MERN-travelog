@@ -27,7 +27,7 @@ const Profile = () => {
       const json = await response.json()
 
       if(response.ok){
-        dispatch({type:'SET_RELEVANT_TRAVELLOGS', payload:json})
+        dispatch({type:'SET_TRAVELLOGS', payload:json})
         setLoading(false)
       }
     }

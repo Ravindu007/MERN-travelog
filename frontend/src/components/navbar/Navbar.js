@@ -5,9 +5,11 @@ import { useAuthContext } from '../../hooks/useAuthContext'
 
 import { useLogout } from '../../hooks/useLogout'
 
-const Navbar = () => {
+const Navbar = ({isAdmin}) => {
+  
   const {logout} = useLogout()
   const {user} = useAuthContext()
+
    
   const handleLogout = () => {
     logout()
@@ -27,7 +29,8 @@ const Navbar = () => {
       <div  style={{display:"flex", justifyContent:"flex-end"}} className="collapse navbar-collapse" id='menu'>
         <ul className="navbar-nav">
           <li className="nav-item"><Link to="/" className='nav-link'>Home</Link></li>
-          <li className="nav-item"><Link to="/profile" className='nav-link'>Profile</Link></li>
+
+        
           {!user && (
             <>
               <li className="nav-item"><Link to="/login" className='nav-link'>Login</Link></li>
@@ -36,6 +39,8 @@ const Navbar = () => {
           )}
           {user && (
             <>
+              {user && isAdmin && <li className="nav-item"><Link to="/admin" className='nav-link'>Admin</Link></li>}
+              <li className="nav-item"><Link to="/profile" className='nav-link'>Profile</Link></li>
               <span className='nav-link' >{user.email}</span>
               <li className="nav-item"><Link onClick={handleLogout} className='nav-link'>Logout</Link></li>  
             </>
