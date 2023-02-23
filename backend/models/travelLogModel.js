@@ -10,7 +10,8 @@ const travelLogSchema = new Schema({
   image:{type:String},
   userEmail: {type:String, required:true},
   user_id:{type:String, required:true},
-  approval:{type:String}
+  approval:{type:String, required:true},
+  related_id:{type:String, required:true},
 },{timestamps:true})
 
 module.exports = mongoose.model('travelLog', travelLogSchema)

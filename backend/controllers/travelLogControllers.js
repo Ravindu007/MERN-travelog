@@ -9,7 +9,7 @@ const bucket = admin.storage().bucket(process.env.STORAGE_BUCKET);
 
 //create admin approved posts
 const createApprovedTravelLog = async(req,res) => {
-  const {title, place, date, desc, image, userEmail, user_id, approved} = req.body
+  const {title, place, date, desc, image, userEmail, user_id, approved, related_id} = req.body
   
   try{
     const travelLog = await adminApprovedTravellogModel.create({
@@ -20,7 +20,8 @@ const createApprovedTravelLog = async(req,res) => {
       image,
       userEmail,
       user_id,
-      approved
+      approved,
+      related_id
     });
     res.status(200).json(travelLog);
   }catch (error) {
@@ -40,7 +41,7 @@ const getAllTravelLogs = async(req,res) => {
 
 //update only approval
 const updateApproval = async(req,res) => {
-  const {approval} = req.body
+  const {approval, related_id} = req.body
 
   try {
       const {id} = req.params
@@ -61,6 +62,7 @@ const updateApproval = async(req,res) => {
 
       // update travel log properties
       travelLog.approval = approval
+      travelLog.related_id = related_id
       
       const updatedTravelLog = await travelLog.save();
       res.status(200).json(updatedTravelLog);
@@ -69,6 +71,28 @@ const updateApproval = async(req,res) => {
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
+}
+
+
+const deleteAdminApproved = async(req, res) => {
+  try {
+    const {id} = req.params
+    console.log(id);
+
+    if(!mongoose.Types.ObjectId.isValid(id)){
+      res.status(400).json({error:"No such document 123"})
+    }
+
+    const deletedTravelLog = await adminApprovedTravellogModel.findByIdAndDelete({_id:id})
+
+    if(!deletedTravelLog){
+      res.status(400).json({error:"No such document"})
+    }
+
+    res.status(200).json(deletedTravelLog)
+  } catch (error) {
+    res.status(400).json({error:error.message})
+  }
 }
 
 
@@ -121,7 +145,7 @@ const getASingleTravelLog = async(req,res) => {
 
 // create doc
 const createTravelLog = async(req,res) => {
-  const {title, place, date, desc} = req.body
+  const {title, place, date, desc, approval, related_id} = req.body
   const user_id = req.user._id
   const userEmail = req.userEmail
 
@@ -151,14 +175,16 @@ const createTravelLog = async(req,res) => {
           desc,
           image: imageURL,
           user_id,
-          userEmail
+          userEmail,
+          approval,
+          related_id
         });
         res.status(200).json(travelLog);
       });
 
       stream.end(req.file.buffer);
     }else {
-      const travelLog = await travelLogModel.create({title,place,date,desc,image: null,user_id, userEmail});
+      const travelLog = await travelLogModel.create({title,place,date,desc,image: null,user_id, userEmail, approval,related_id});
       res.status(200).json(travelLog);
     }
   } catch (error) {
@@ -255,4 +281,4 @@ const deleteATravelLog = async(req, res) => {
   }
 }
 
-module.exports = {createTravelLog, getAdminApprovedTravelLogs, getAllRealtedTravelLogs,getASingleTravelLog, updateATravelLog, deleteATravelLog, createApprovedTravelLog, getAllTravelLogs, updateApproval}
+module.exports = {createTravelLog, getAdminApprovedTravelLogs, getAllRealtedTravelLogs,getASingleTravelLog, updateATravelLog, deleteATravelLog, createApprovedTravelLog, getAllTravelLogs, updateApproval, deleteAdminApproved}

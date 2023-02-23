@@ -56,19 +56,42 @@ const RelatedTravelLogDetails = ({relatedTravelLog}, props) => {
       if(!user){
         console.log("You must loggef in first")
       }
-      const response = await fetch("/api/travelLogs/" + relatedTravelLog._id,{
-        method:"DELETE",
-        headers:{
-          'Authorization': `${user.email} ${user.token}`
+      
+
+      try{
+           // errors happens because ids are not same
+           const response2 = await fetch("/api/travelLogs/adminApproved/" + relatedTravelLog.related_id,{
+            method:"DELETE",
+            headers:{
+              'Authorization': `${user.email} ${user.token}`
+            }
+          })
+  
+          if(!response2.ok) {
+            throw new Error(`Failed to delete travel log: ${response2.statusText}`)
+          }
+
+          const response1 = await fetch("/api/travelLogs/" + relatedTravelLog._id,{
+            method:"DELETE",
+            headers:{
+              'Authorization': `${user.email} ${user.token}`
+            }
+          })
+
+          if(!response1.ok) {
+            throw new Error(`Failed to delete travel log: ${response1.statusText}`)
+          }
+        
+
+        if(response1.ok && response2.ok){
+          const json1 = await response1.json()
+          const json2 = await response2.json()
+          dispatch({type:"DELETE_TRAVELLOG", payload:json1})
+          dispatch({type:"DELETE_TRAVELLOG", payload:json2})
         }
-      })
-
-      const json = await response.json()
-
-      if(response.ok){
-        dispatch({type:"DELETE_TRAVELLOG", payload:json})
+      }catch(error){
+        console.error(error)
       }
-    
   }
 
 
@@ -174,7 +197,8 @@ const RelatedTravelLogDetails = ({relatedTravelLog}, props) => {
                       >
                         Delete
                       </button>
-                    <button 
+                    {relatedTravelLog.approval === "false" && (
+                      <button 
                       onClick={()=>{
                         setIsEditing(true)
                         setDraftTitle(relatedTravelLog.title)
@@ -186,6 +210,7 @@ const RelatedTravelLogDetails = ({relatedTravelLog}, props) => {
                       >
                         Update
                       </button>
+                    )}
                   </div>
                 )}
             </div>     

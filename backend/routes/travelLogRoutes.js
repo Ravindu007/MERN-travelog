@@ -2,7 +2,7 @@ const express = require("express")
 const multer = require("multer")
 const requireAuth = require("../middleware/requireAuth")
 
-const {createTravelLog,getAdminApprovedTravelLogs, getAllRealtedTravelLogs, getASingleTravelLog, updateATravelLog, deleteATravelLog,getAllTravelLogs, createApprovedTravelLog, updateApproval} = require("../controllers/travelLogControllers")
+const {createTravelLog,getAdminApprovedTravelLogs, getAllRealtedTravelLogs, getASingleTravelLog, updateATravelLog, deleteATravelLog,getAllTravelLogs, createApprovedTravelLog, updateApproval, deleteAdminApproved} = require("../controllers/travelLogControllers")
 
 const router = express.Router()
 
@@ -18,7 +18,9 @@ router.get("/adminAllTravelLogs", getAllTravelLogs)
 
 router.post("/toAdmin", upload.single("image"), createApprovedTravelLog)
 
-router.patch("/:id",upload.single("image"), updateApproval)
+router.patch("/adminApproved/:id",upload.single("image"), updateApproval)
+
+router.delete("/adminApproved/:id", deleteAdminApproved)
 
 
 

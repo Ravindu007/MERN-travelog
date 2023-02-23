@@ -32,6 +32,8 @@ const TravelLogForm = () => {
     formData.append('date', date)
     formData.append('desc', desc)
     formData.append('image', image)
+    formData.append('approval', false)
+    formData.append('related_id', title)
 
     const response = await fetch("/api/travelLogs/",{
       method:'POST',

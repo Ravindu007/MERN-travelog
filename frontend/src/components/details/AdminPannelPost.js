@@ -30,6 +30,7 @@ const AdminPannelPost = ({travelLog}, props) => {
     formData.append('user_id', travelLog.user_id)
     formData.append('approved', true)
 
+    //create new doc in new collection
     const response = await fetch("/api/travelLogs/toAdmin",{
       method:'POST',
       body:formData,
@@ -41,11 +42,15 @@ const AdminPannelPost = ({travelLog}, props) => {
     const json = await response.json()
 
 
-    //for approval field only
+
+    //update existing doc in existing collection
+    const related_id = json["_id"] //getting id of the newly created doc
+
     const formDataForPatchRequest = new FormData()
     formDataForPatchRequest.append("approval", true)
+    formDataForPatchRequest.append("related_id",related_id) //similar field to make reference
 
-    const response2 = await fetch("/api/travelLogs/" + travelLog._id, {
+    const response2 = await fetch("/api/travelLogs/adminApproved/" + travelLog._id, {
       method:"PATCH",
       body:formDataForPatchRequest,
       headers:{
@@ -77,7 +82,6 @@ const AdminPannelPost = ({travelLog}, props) => {
                 <img src={travelLog.image ? `${travelLog.image}`:"/fallback.jpg"} alt="" className='mx-auto d-block img-fluid'style={{maxHeight:"400px"}}/>
               </div>
               <div className="details col-md-12">
-                <p><strong>Name: </strong>{travelLog.title}</p>
                 <p><strong>Place: </strong>{travelLog.place}</p>
                 <p><strong>Date: </strong>{travelLog.date}</p>
                 <p><strong>Description: </strong>{travelLog.desc}</p>
