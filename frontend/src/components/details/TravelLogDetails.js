@@ -14,7 +14,10 @@ const TravelLogDetails = ({travelLog}) => {
 
 
   return (
-    <div className='travelLogDetails'>
+    <>
+    {/* in here docs are fetched from adminAproved collection "adminApprovedTravelLogs" */}
+    {travelLog.approved === "true" && (
+      <div className='travelLogDetails'>
       <div className="row">
             <div className="images col-sm-12 col-md-6">
               <img src={travelLog.image ? `${travelLog.image}`:"/fallback.jpg"} alt={travelLog.image} className='mx-auto d-block img-fluid' style={{minHeight:"400px"}}/>
@@ -30,6 +33,8 @@ const TravelLogDetails = ({travelLog}) => {
             </div>     
       </div>
     </div>
+    )}
+    </>
   )
 }
 

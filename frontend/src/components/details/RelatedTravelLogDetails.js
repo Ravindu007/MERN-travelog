@@ -185,7 +185,9 @@ const RelatedTravelLogDetails = ({relatedTravelLog}, props) => {
               <img src={relatedTravelLog.image ? `${relatedTravelLog.image}`:"/fallback.jpg"} alt="" className='mx-auto d-block img-fluid'style={{maxHeight:"400px"}}/>
             </div>
             <div className="details col-md-12">
-                <p><strong>APPROVED BY ADMIN: </strong>{relatedTravelLog.approval}</p>
+                <p><strong>APPROVED BY ADMIN: </strong>
+                  {relatedTravelLog.approval === "Rejected" ? <span style={{color: "red"}}>{relatedTravelLog.approval}</span> : relatedTravelLog.approval}
+                </p>
                 <p><strong>Name: </strong>{relatedTravelLog.title}</p>
                 <p><strong>Place: </strong>{relatedTravelLog.place}</p>
                 <p><strong>Date: </strong>{relatedTravelLog.date}</p>

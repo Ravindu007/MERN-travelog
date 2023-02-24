@@ -61,7 +61,7 @@ const AdminPannelPost = ({travelLog}, props) => {
     const json2 = await response2.json();
 
 
-    if(response.ok){
+    if(response.ok && response2){
       dispatch({type:"CREATE_TRAVELLOG", payload:json})
       dispatch({type:"UPDATE_TRAVELLOG", payload:json2})
       console.log('travelLog created', json);
@@ -72,10 +72,69 @@ const AdminPannelPost = ({travelLog}, props) => {
 
   }
 
+
+
+  const handleReject = async(e) => {
+    e.preventDefault()
+
+    //creating new doc with rejected approval
+    const formData4 = new FormData()
+    formData4.append('title', travelLog.title)
+    formData4.append('place', travelLog.place)
+    formData4.append('date', travelLog.date)
+    formData4.append('desc', travelLog.desc)
+    formData4.append('image', travelLog.image)
+    formData4.append('userEmail',travelLog.userEmail)
+    formData4.append('user_id', travelLog.user_id)
+    formData4.append('approved', false)
+
+    //create new doc in new collection
+    const response4 = await fetch("/api/travelLogs/toAdmin",{
+      method:'POST',
+      body:formData4,
+      headers:{
+        'Authorization':`${user.email} ${user.token}`
+      }
+    })
+
+    const json4 = await response4.json()
+
+    const related_id = json4["_id"] //getting id of the newly created doc
+    //updaing exisitng doc
+    const formData3 = new FormData()
+    formData3.append("approval", "Rejected")
+    formData3.append("related_id",related_id) //similar field to make reference
+
+    //update existing doc in existing collection
+
+    const response3 = await fetch("/api/travelLogs/adminApproved/rejected/" + travelLog._id,{
+      method: "PATCH",
+      body:formData3,
+      headers:{
+        'Authorization': `${user.email} ${user.token}`
+      }
+    })
+
+    const json3 = await response3.json()
+
+
+
+    
+
+    if(response3.ok && response4.ok){
+      dispatch({type:"UPDATE_TRAVELLOG", payload:json3})
+      dispatch({type:"CREATE_TRAVELLOG", payload:json4})
+      console.log('travelLog updated', json4);
+      console.log('travelLog created', json3);
+
+      navigate('/');
+    }
+  }
+
   return (
     <>
       {(
-        travelLog.approval !== "true" && (
+        (travelLog.approval !== "true" && travelLog.approval !== "Rejected") && (
           <div className='RelatedTravelLogDetails'>
             <div className="row">
               <div className="images col-md-12">
@@ -98,7 +157,7 @@ const AdminPannelPost = ({travelLog}, props) => {
                       Accept
                     </button>
                     <button 
-                      onClick={()=>{}}
+                      onClick={handleReject}
                       className='btn btn-outline-danger'
                     >
                       Reject

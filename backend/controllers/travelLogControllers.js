@@ -74,6 +74,39 @@ const updateApproval = async(req,res) => {
 }
 
 
+const updateRejection =  async(req,res) => {
+  const {approval, related_id} = req.body
+
+  try{
+      const {id} = req.params
+
+      //enusre id is valid
+      if(!mongoose.Types.ObjectId.isValid(id)){
+        res.status(400).json({error:"No such document"})
+      }
+
+
+      const travelLog = await travelLogModel.findById(id);
+
+      // ensure the travel log exists
+      if (!travelLog) {
+        return res.status(404).json({ error: "Travel log not found" });
+      }
+
+       // update travel log properties
+       travelLog.approval = approval
+       travelLog.related_id = related_id
+      
+      const updatedTravelLog = await travelLog.save();
+      res.status(200).json(updatedTravelLog);
+
+  }catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+
+}
+
+
 const deleteAdminApproved = async(req, res) => {
   try {
     const {id} = req.params
@@ -281,4 +314,4 @@ const deleteATravelLog = async(req, res) => {
   }
 }
 
-module.exports = {createTravelLog, getAdminApprovedTravelLogs, getAllRealtedTravelLogs,getASingleTravelLog, updateATravelLog, deleteATravelLog, createApprovedTravelLog, getAllTravelLogs, updateApproval, deleteAdminApproved}
+module.exports = {createTravelLog, getAdminApprovedTravelLogs, getAllRealtedTravelLogs,getASingleTravelLog, updateATravelLog, deleteATravelLog, createApprovedTravelLog, getAllTravelLogs, updateApproval, deleteAdminApproved, updateRejection}
