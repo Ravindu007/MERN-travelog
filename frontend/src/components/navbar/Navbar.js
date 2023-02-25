@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import {Link} from "react-router-dom"
+import {Link, useLocation} from "react-router-dom"
 
 import { useAuthContext } from '../../hooks/useAuthContext'
 
@@ -7,6 +7,9 @@ import { useLogout } from '../../hooks/useLogout'
 import { useTravelLogContext } from '../../hooks/useTravelLogContext'
 
 const Navbar = ({isAdmin}) => {
+
+  const location = useLocation();
+
 
   const {dispatch} = useTravelLogContext()
   
@@ -46,7 +49,8 @@ const Navbar = ({isAdmin}) => {
       <Link to = "/" className='navbar-brand' style={{marginLeft:"1em"}}>TraveLog</Link>
 
       {/* Search bar */}
-      <form onSubmit={submitSearch}>
+      {location.pathname === "/" && user && (
+        <form onSubmit={submitSearch}>
         <input 
           type="text"
           onChange={e => {setSearchTerm(e.target.value)}} 
@@ -54,6 +58,7 @@ const Navbar = ({isAdmin}) => {
         />
         <button>SEARCH</button>
       </form>
+      )}
 
 
       {/* toggle button */}

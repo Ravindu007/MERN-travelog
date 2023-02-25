@@ -64,8 +64,8 @@ const AdminPannelPost = ({travelLog}, props) => {
     if(response.ok && response2){
       dispatch({type:"CREATE_TRAVELLOG", payload:json})
       dispatch({type:"UPDATE_TRAVELLOG", payload:json2})
-      console.log('travelLog created', json);
-      console.log('travelLog updated', json2);
+      // console.log('travelLog created', json);
+      // console.log('travelLog updated', json2);
 
       navigate('/');
     }
@@ -124,8 +124,8 @@ const AdminPannelPost = ({travelLog}, props) => {
     if(response3.ok && response4.ok){
       dispatch({type:"UPDATE_TRAVELLOG", payload:json3})
       dispatch({type:"CREATE_TRAVELLOG", payload:json4})
-      console.log('travelLog updated', json4);
-      console.log('travelLog created', json3);
+      // console.log('travelLog updated', json4);
+      // console.log('travelLog created', json3);
 
       navigate('/');
     }

@@ -186,7 +186,7 @@ const RelatedTravelLogDetails = ({relatedTravelLog}, props) => {
             </div>
             <div className="details col-md-12">
                 <p><strong>APPROVED BY ADMIN: </strong>
-                  {relatedTravelLog.approval === "Rejected" ? <span style={{color: "red"}}>{relatedTravelLog.approval}</span> : relatedTravelLog.approval}
+                  {relatedTravelLog.approval === "Rejected" ? <span style={{color: "red"}}>{relatedTravelLog.approval}</span> :(relatedTravelLog.approval === "false" ? <span>waiting for approval</span> : <span style={{color:"green"}}>Accepted</span>) }
                 </p>
                 <p><strong>Name: </strong>{relatedTravelLog.title}</p>
                 <p><strong>Place: </strong>{relatedTravelLog.place}</p>

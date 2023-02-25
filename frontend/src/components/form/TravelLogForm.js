@@ -52,7 +52,7 @@ const TravelLogForm = () => {
       setDesc('')
       setImage(null)
       dispatch({type:"CREATE_TRAVELLOG", payload:json})
-      console.log('travelLog created', json);
+      // console.log('travelLog created', json);
       setIsLoading(false)
     }
   }

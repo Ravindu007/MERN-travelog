@@ -111,7 +111,6 @@ const updateRejection =  async(req,res) => {
 const deleteAdminApproved = async(req, res) => {
   try {
     const {id} = req.params
-    console.log(id);
 
     if(!mongoose.Types.ObjectId.isValid(id)){
       res.status(400).json({error:"No such document 123"})
