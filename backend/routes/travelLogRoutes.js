@@ -2,7 +2,7 @@ const express = require("express")
 const multer = require("multer")
 const requireAuth = require("../middleware/requireAuth")
 
-const {createTravelLog,getAdminApprovedTravelLogs, getAllRealtedTravelLogs, getASingleTravelLog, updateATravelLog, deleteATravelLog,getAllTravelLogs, createApprovedTravelLog, updateApproval, deleteAdminApproved, updateRejection} = require("../controllers/travelLogControllers")
+const {createTravelLog,getAdminApprovedTravelLogs,getSeachedResults, getAllRealtedTravelLogs, getASingleTravelLog, updateATravelLog, deleteATravelLog,getAllTravelLogs, createApprovedTravelLog, updateApproval, deleteAdminApproved, updateRejection} = require("../controllers/travelLogControllers")
 
 const router = express.Router()
 
@@ -28,6 +28,9 @@ router.delete("/adminApproved/:id", deleteAdminApproved)
 
 //normal user routes
 router.get("/", getAdminApprovedTravelLogs)
+
+//get searched results
+router.get("/searched", getSeachedResults)
 
 //get all the workouts related to id
 router.get("/related", getAllRealtedTravelLogs)

@@ -39,6 +39,7 @@ const getAllTravelLogs = async(req,res) => {
   }
 }
 
+
 //update only approval
 const updateApproval = async(req,res) => {
   const {approval, related_id} = req.body
@@ -142,6 +143,29 @@ const getAdminApprovedTravelLogs = async(req,res) =>{
     res.status(400).json({error:error.message})
   }
 }
+
+//getSearched Results
+const getSeachedResults = async(req, res) => {
+  const {searchTerm} = req.query;
+
+  try{
+    const searchRegex = new RegExp(searchTerm, 'i');
+
+    const searchedTravelLogs = await adminApprovedTravellogModel.find({
+      $or: [
+        { title: { $regex: searchRegex } },
+        { place: { $regex: searchRegex } },
+        { desc: { $regex: searchRegex } },
+        { userEmail: { $regex: searchRegex } },
+        // add more fields to search here if needed
+      ]
+    });
+    res.status(200).json(searchedTravelLogs)
+  }catch(error){
+    res.status(400).json({error:error})
+  }
+}
+
 
 //get all related travelLogs (filter by id => for profile)
 const getAllRealtedTravelLogs = async(req,res) => {
@@ -314,4 +338,4 @@ const deleteATravelLog = async(req, res) => {
   }
 }
 
-module.exports = {createTravelLog, getAdminApprovedTravelLogs, getAllRealtedTravelLogs,getASingleTravelLog, updateATravelLog, deleteATravelLog, createApprovedTravelLog, getAllTravelLogs, updateApproval, deleteAdminApproved, updateRejection}
+module.exports = {createTravelLog, getAdminApprovedTravelLogs,getSeachedResults, getAllRealtedTravelLogs,getASingleTravelLog, updateATravelLog, deleteATravelLog, createApprovedTravelLog, getAllTravelLogs, updateApproval, deleteAdminApproved, updateRejection}
