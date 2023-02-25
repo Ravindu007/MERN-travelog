@@ -2,7 +2,7 @@ const express = require("express")
 const multer = require("multer")
 const requireAuth = require("../middleware/requireAuth")
 
-const {createTravelLog,getAdminApprovedTravelLogs,getSeachedResults, getAllRealtedTravelLogs, getASingleTravelLog, updateATravelLog, deleteATravelLog,getAllTravelLogs, createApprovedTravelLog, updateApproval, deleteAdminApproved, updateRejection} = require("../controllers/travelLogControllers")
+const {createTravelLog,getAdminApprovedTravelLogs,getSeachedResults, getAllRealtedTravelLogs, getASingleTravelLog, updateATravelLog, deleteATravelLog,getAllTravelLogs, createApprovedTravelLog, updateApproval, deleteAdminApproved, updateRejection, getAllcomments, createAComment, updateAComment, deleteAComment} = require("../controllers/travelLogControllers")
 
 const router = express.Router()
 
@@ -44,4 +44,13 @@ router.patch("/:id",upload.single("image"), updateATravelLog)
 router.delete("/:id", deleteATravelLog)
 
 
+
+//comment routes
+router.get("/singlePost/comments", getAllcomments)
+
+router.post("/singlePost/comments", createAComment)
+
+router.patch("/singlePost/comments/:id", updateAComment)
+
+router.delete("/singlePost/comments/:id", deleteAComment)
 module.exports = router

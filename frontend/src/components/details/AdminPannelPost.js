@@ -30,6 +30,7 @@ const AdminPannelPost = ({travelLog}, props) => {
     formData.append('user_id', travelLog.user_id)
     formData.append('approved', true)
 
+
     //create new doc in new collection
     const response = await fetch("/api/travelLogs/toAdmin",{
       method:'POST',

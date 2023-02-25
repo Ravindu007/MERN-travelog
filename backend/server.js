@@ -1,6 +1,8 @@
 require("dotenv").config()
 const mongoose = require("mongoose")
 const express = require("express")
+const formidableMiddleware = require('express-formidable');
+
 
 const admin = require("firebase-admin");
 const serviceAccount = require("./serviceAaccount.json");
@@ -16,6 +18,7 @@ const App = express()
 
 //midlleware
 App.use(express.json())
+App.use(formidableMiddleware());
 
 
 //establishing router

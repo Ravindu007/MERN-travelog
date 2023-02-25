@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const adminApprovedTravellogModel = require("../models/adminApprovedTravellogModel");
 const travelLogModel = require("../models/travelLogModel")
+const commentModel = require("../models/commentModel")
 
 const {admin} = require("../server")
 const bucket = admin.storage().bucket(process.env.STORAGE_BUCKET);
@@ -337,4 +338,54 @@ const deleteATravelLog = async(req, res) => {
   }
 }
 
-module.exports = {createTravelLog, getAdminApprovedTravelLogs,getSeachedResults, getAllRealtedTravelLogs,getASingleTravelLog, updateATravelLog, deleteATravelLog, createApprovedTravelLog, getAllTravelLogs, updateApproval, deleteAdminApproved, updateRejection}
+
+
+
+//comments controllers 
+const getAllcomments = async(req,res) =>{
+  try{
+    const allComments = await commentModel.find({}).sort({createdAt:-1})
+    res.status(200).json(allComments)
+  }catch(error){
+    res.status(400).json(error)
+  }
+}
+
+const createAComment = async(req,res) => {
+  const { text, by, post_id } = req.fields;
+
+
+  try {
+    const comment = await commentModel.create({text,by,post_id})
+    res.status(200).json(comment)
+  } catch (error) {
+    res.status(400).json(error)
+  }
+}
+
+const updateAComment = async(req,res) => {
+  const {id} = req.params
+
+  try {
+    const updateComment = await commentModel.findByIdAndUpdate({_id:id},{...req.body},{new:true})
+
+    res.status(200).json(updateComment)
+  } catch (error) {
+    res.status(400).json(error)
+  }
+}
+
+//delete a comment
+const deleteAComment = async(req,res) => {
+  try{
+    const {id} = req.params
+
+    const deleteComment= await commentModel.findByIdAndDelete({_id:id})
+
+    res.status(200).json(deleteComment)
+  }catch (error) {
+    res.status(400).json(error)
+  }
+}
+
+module.exports = {createTravelLog, getAdminApprovedTravelLogs,getSeachedResults, getAllRealtedTravelLogs,getASingleTravelLog, updateATravelLog, deleteATravelLog, createApprovedTravelLog, getAllTravelLogs, updateApproval, deleteAdminApproved, updateRejection, getAllcomments, createAComment, updateAComment, deleteAComment}
