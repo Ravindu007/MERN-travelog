@@ -182,13 +182,12 @@ const getAllRealtedTravelLogs = async(req,res) => {
 const getASingleTravelLog = async(req,res) => {
   try {
     const {id} = req.params
-
-    //ensure id is valid 
+    //ensure id is valid
     if(!mongoose.Types.ObjectId.isValid(id)){
       res.status(400).json({error:"No such document"})
     }
 
-    const singleTravelLog = await travelLogModel.findById(id)
+    const singleTravelLog = await adminApprovedTravellogModel.findById(id)
 
     if(!singleTravelLog){
       res.status(400).json({error: "No such document"})
@@ -341,6 +340,7 @@ const deleteATravelLog = async(req, res) => {
 
 
 
+//comments
 //comments controllers 
 const getAllcomments = async(req,res) =>{
   try{
@@ -352,7 +352,7 @@ const getAllcomments = async(req,res) =>{
 }
 
 const createAComment = async(req,res) => {
-  const { text, by, post_id } = req.fields;
+  const { text, by, post_id } = req.body;
 
 
   try {
@@ -387,5 +387,6 @@ const deleteAComment = async(req,res) => {
     res.status(400).json(error)
   }
 }
+
 
 module.exports = {createTravelLog, getAdminApprovedTravelLogs,getSeachedResults, getAllRealtedTravelLogs,getASingleTravelLog, updateATravelLog, deleteATravelLog, createApprovedTravelLog, getAllTravelLogs, updateApproval, deleteAdminApproved, updateRejection, getAllcomments, createAComment, updateAComment, deleteAComment}

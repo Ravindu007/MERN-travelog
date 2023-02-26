@@ -16,6 +16,8 @@ const Home = () => {
 
   //fetch data from backEnd
   useEffect(()=>{
+    console.log('useEffect hook is being executed')
+
     const fetchTravelLogs = async() => {
       const response = await fetch("/api/travelLogs/", {
         headers:{

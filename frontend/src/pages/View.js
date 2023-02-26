@@ -1,107 +1,155 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom'
+import { useParams } from 'react-router-dom';
 import Comment from '../components/comment/Comment';
 import { useAuthContext } from '../hooks/useAuthContext';
-
+import { useTravelLogContext } from '../hooks/useTravelLogContext';
 //styles
 import "./view.scss"
 
 const View = () => {
-
-  const location = useLocation();
-  const travelLog = location.state.travelLog;
-
   const {user} = useAuthContext()
+  const {travelLogs:fetchedTravelLog, dispatch} = useTravelLogContext()
 
-  const [comments,setComments] = useState(null)
+  //all comments
+  const [comments, setAllCommnets] = useState("")
 
-  //for new comment
-  const [newComment, setNewComment] = useState("") //text filed
 
-  //for reload comments
-  const [shouldReload, setShouldReload] = useState(false); // new state variable
+  const [isPostLoading, setIsPostLoading] = useState(true)
+  const [isCommentsLoading, setIsCommentLoading] = useState(true)
+
+  
+   //for reload comments
+   const [shouldReload, setShouldReload] = useState(false); // new state variable
+
+
+
+  const { id } = useParams();
 
 
   useEffect(()=>{
-    //fetch comments
-    const fetchAllRelatedComments = async() => {
-      const response =  await fetch("/api/travelLogs/singlePost/comments",{
+
+    const fetchSingleTravelLogs = async() => {
+      const response = await fetch("/api/travelLogs/singlePost/" + id, {
         headers:{
           'Authorization': `${user.email} ${user.token}`
         }
       })
-      const json = await response.json() 
+      const json = await response.json()
 
       if(response.ok){
-        setComments(json)
+        console.log(json);
+        dispatch({type:"SET_TRAVELLOGS", payload:json})
+        setIsPostLoading(false)
       }
-    }  
+    }
+
+    const fetchAllComments = async() => {
+      const response = await fetch("/api/travelLogs/comments",{
+        headers:{
+          'Authorization': `${user.email} ${user.token}`
+        }
+      })
+      const json = await response.json()
+
+      if(response.ok){
+        console.log("comments",json);
+        setAllCommnets(json)
+        setIsCommentLoading(false)
+      }
+    }
+
+    if(user){
+      fetchSingleTravelLogs()
+      fetchAllComments()
+    }
+
+
     
-    fetchAllRelatedComments()
-  },[user, shouldReload])
 
-  
+  },[user,dispatch, id, shouldReload])
 
 
-  const handleSubmit = async(e) =>{
+  //for new comment
+  const [newComment, setNewComment] = useState("")
+
+
+  const addComment = async(e) => {
+    
     e.preventDefault()
 
-    const formDataComment = new FormData()
-    formDataComment.append('text', newComment)
-    formDataComment.append('by', user.email )
-    formDataComment.append('post_id', travelLog._id)
+    const formData = new FormData()
+    formData.append('text',newComment)
+    formData.append('by', user.email)
+    formData.append('post_id' ,fetchedTravelLog._id )
 
 
-    const responseComment = await fetch("/api/travelLogs/singlePost/comments",{
+    const response = await fetch("/api/travelLogs/comments", {
       method:"POST",
-      body:formDataComment,
+      body:formData,
       headers:{
-        'Authorization': `${user.email} ${user.token}`
+        'Authorization': `${user.email} ${user.token}`,
       }
     })
 
-    const json = await responseComment.json()
+    const json = await response.json()
 
-    if(responseComment.ok){
-      setNewComment("")
-      console.log("New comment added",json);
+    if(response.ok){
+      console.log("new comment added",json);
       setShouldReload(true); // trigger a reload
     }
   }
 
+
   return (
     <div className='view'>
-      <div className="details">
-        <div className="images col-sm-12 col-md-6">
-              <img src={travelLog.image ? `${travelLog.image}`:"/fallback.jpg"} alt={travelLog.image} className='mx-auto d-block img-fluid' style={{minHeight:"400px"}}/>
-      </div>
-      
-      <h2>{travelLog.title}</h2>
-      <p>{travelLog.desc}</p>
-      </div>
-      <div className="comments-section">
-        <div className="comments">
-          {comments && comments.map((comment)=>(
-            comment.post_id === travelLog._id ? (
-              <Comment key={comment._id} comment={comment}/>
-            ):null
-          ))}
-        </div>
-        <div className="add-new-comment">
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              
-              <input 
-                type="text" 
-                onChange={e=>{setNewComment(e.target.value)}}
-                value={newComment}
-                className="form-control"
-              />
+      {isPostLoading ? (
+        <p>LOADING...</p>
+      ) : (
+        fetchedTravelLog && (
+          <div className="singleTravelLog">
+            <div className="row detailsPart">
+              <div className="image col-sm-12">
+                <img src={fetchedTravelLog.image ? `${fetchedTravelLog.image}`:"/fallback.jpg"} alt="" className='mx-auto d-block img-fluid'style={{maxHeight:"400px", width:"40%"}}/>
+              </div>
+              <div className="details col-sm-12">
+                <p><strong>Title: </strong>{fetchedTravelLog.title}</p>
+                <p><strong>Description: </strong>{fetchedTravelLog.desc}</p>
+              </div>
             </div>
-            <button className='btn btn-outline-primary'>comment</button>
-          </form>
-        </div>
-      </div>
+            <div className="row commentsPart">
+              <div className="comments col-sm-12">
+                <p>Comments</p>
+                {isCommentsLoading ? (
+                  <p>Loading</p>
+                ) : (
+                  comments && (
+                    comments.map((comment)=>(
+                      fetchedTravelLog._id === comment.post_id ? (
+                        <Comment key={comment._id} comment={comment}/>
+                      ):(
+                        null
+                      )
+                    ))
+                  )
+                )}
+              </div>
+              <div className="addComment col-sm-12">
+                <form onSubmit={addComment}>
+                  <div className="form-group">
+                    <input 
+                      className='form-control'
+                      type="text"
+                      onChange={e=>setNewComment(e.target.value)}
+                      value={newComment}
+                    />
+                  </div>
+                  <button className='btn btn-outline-primary'>Comment</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        )
+      )}
     </div>
   );
 };

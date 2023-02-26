@@ -17,6 +17,7 @@ const Profile = () => {
 
   //fetch data from backEnd
   useEffect(()=>{
+
     const fetchTravelLogs = async() => {
       //data fetched from backend (filter by id)
       const response = await fetch("/api/travelLogs/related",{

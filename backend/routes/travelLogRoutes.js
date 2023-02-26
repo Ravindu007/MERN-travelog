@@ -2,7 +2,7 @@ const express = require("express")
 const multer = require("multer")
 const requireAuth = require("../middleware/requireAuth")
 
-const {createTravelLog,getAdminApprovedTravelLogs,getSeachedResults, getAllRealtedTravelLogs, getASingleTravelLog, updateATravelLog, deleteATravelLog,getAllTravelLogs, createApprovedTravelLog, updateApproval, deleteAdminApproved, updateRejection, getAllcomments, createAComment, updateAComment, deleteAComment} = require("../controllers/travelLogControllers")
+const {createTravelLog,getAdminApprovedTravelLogs,getSeachedResults, getAllRealtedTravelLogs, getASingleTravelLog, updateATravelLog, deleteATravelLog,getAllTravelLogs, createApprovedTravelLog, updateApproval, deleteAdminApproved, updateRejection,getAllcomments,createAComment,updateAComment,deleteAComment} = require("../controllers/travelLogControllers")
 
 const router = express.Router()
 
@@ -12,6 +12,9 @@ const upload = multer({
   storage: multer.memoryStorage(),
 });
 
+
+//for comments 
+const uploadComments = multer()
 
 //admin routes
 router.get("/adminAllTravelLogs", getAllTravelLogs)
@@ -35,7 +38,7 @@ router.get("/searched", getSeachedResults)
 //get all the workouts related to id
 router.get("/related", getAllRealtedTravelLogs)
 
-router.get("/:id", getASingleTravelLog)
+router.get("/singlePost/:id", getASingleTravelLog)
 
 router.post("/", upload.single("image"), createTravelLog)
 
@@ -45,12 +48,13 @@ router.delete("/:id", deleteATravelLog)
 
 
 
+
 //comment routes
-router.get("/singlePost/comments", getAllcomments)
+router.get("/comments", getAllcomments)
 
-router.post("/singlePost/comments", createAComment)
+router.post("/comments", uploadComments.none() , createAComment)
 
-router.patch("/singlePost/comments/:id", updateAComment)
+router.patch("/comments/:id", updateAComment)
 
-router.delete("/singlePost/comments/:id", deleteAComment)
+router.delete("/comments/:id", deleteAComment)
 module.exports = router
