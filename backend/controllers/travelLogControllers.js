@@ -344,7 +344,7 @@ const deleteATravelLog = async(req, res) => {
 //comments controllers 
 const getAllcomments = async(req,res) =>{
   try{
-    const allComments = await commentModel.find({}).sort({createdAt:-1})
+    const allComments = await commentModel.find({}).sort({createdAt:1})
     res.status(200).json(allComments)
   }catch(error){
     res.status(400).json(error)

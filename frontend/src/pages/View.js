@@ -5,6 +5,8 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import { useTravelLogContext } from '../hooks/useTravelLogContext';
 //styles
 import "./view.scss"
+import formatDistanceToNow from "date-fns/formatDistanceToNow"
+
 
 const View = () => {
   const {user} = useAuthContext()
@@ -37,7 +39,7 @@ const View = () => {
       const json = await response.json()
 
       if(response.ok){
-        console.log(json);
+        //console.log(json);
         dispatch({type:"SET_TRAVELLOGS", payload:json})
         setIsPostLoading(false)
       }
@@ -52,7 +54,7 @@ const View = () => {
       const json = await response.json()
 
       if(response.ok){
-        console.log("comments",json);
+        //console.log("comments",json);
         setAllCommnets(json)
         setIsCommentLoading(false)
       }
@@ -71,6 +73,8 @@ const View = () => {
 
   //for new comment
   const [newComment, setNewComment] = useState("")
+  const userEmail = user.email
+  const name = userEmail.split("@")[0]
 
 
   const addComment = async(e) => {
@@ -79,7 +83,7 @@ const View = () => {
 
     const formData = new FormData()
     formData.append('text',newComment)
-    formData.append('by', user.email)
+    formData.append('by', name)
     formData.append('post_id' ,fetchedTravelLog._id )
 
 
@@ -94,8 +98,9 @@ const View = () => {
     const json = await response.json()
 
     if(response.ok){
-      console.log("new comment added",json);
+      //console.log("new comment added",json);
       setShouldReload(true); // trigger a reload
+      setNewComment("")
     }
   }
 
@@ -112,8 +117,13 @@ const View = () => {
                 <img src={fetchedTravelLog.image ? `${fetchedTravelLog.image}`:"/fallback.jpg"} alt="" className='mx-auto d-block img-fluid'style={{maxHeight:"400px", width:"40%"}}/>
               </div>
               <div className="details col-sm-12">
-                <p><strong>Title: </strong>{fetchedTravelLog.title}</p>
+                <p><strong>Name: </strong>{fetchedTravelLog.title}</p>
+                <p><strong>Place: </strong>{fetchedTravelLog.place}</p>
                 <p><strong>Description: </strong>{fetchedTravelLog.desc}</p>
+                <p><strong>Date: </strong>{fetchedTravelLog.date}</p>
+                <p><strong>Created At: </strong>{formatDistanceToNow(new Date(fetchedTravelLog.createdAt), {addSuffix:true})}</p>
+                <p><strong>Updatet At: </strong>{formatDistanceToNow(new Date(fetchedTravelLog.updatedAt), {addSuffix:true})}</p>
+                <p><strong>By: </strong>{fetchedTravelLog.userEmail}</p>
               </div>
             </div>
             <div className="row commentsPart">
