@@ -82,8 +82,8 @@ const RelatedTravelLogDetails = ({relatedTravelLog}, props) => {
           if(!response1.ok) {
             throw new Error(`Failed to delete travel log: ${response1.statusText}`)
           }
-        
 
+          
         if(response1.ok && response2.ok){
           const json1 = await response1.json()
           const json2 = await response2.json()

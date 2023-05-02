@@ -17,7 +17,7 @@ const Admin = () => {
   //fetch data from backEnd
   useEffect(()=>{
     const fetchTravelLogs = async() => {
-      const response = await fetch("/api/travelLogs/adminAllTravelLogs", {
+      const response = await fetch(`/api/travelLogs/adminAllTravelLogs`, {
         headers:{
           'Authorization': `${user.email} ${user.token}`
         }
